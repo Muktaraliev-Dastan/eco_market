@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:eco_market/common/routes/app_router.gr.dart';
 import 'package:eco_market/common/utils/constants.dart';
 import 'package:eco_market/features/home/logic/home_bloc.dart';
 import 'package:eco_market/features/home/repository/product_category_repository.dart';
@@ -61,7 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (ctx, index) {
                     return InkWell(
                       onTap: () {
-                        context.router.pushNamed('/productsScreen');
+                        // context.router.pushNamed('/productsScreen');
+                        context.router.push(
+                          ProductsRoute(
+                            categoryName: state.productCategories[index].name!,
+                            productCategories: state.productCategories,
+                            tabIndex: state.productCategories[index].id!,
+                          ),
+                        );
                       },
                       child: TypeProductCard(
                         productCategoryModel: state.productCategories[index],

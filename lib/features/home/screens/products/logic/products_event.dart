@@ -6,8 +6,8 @@ sealed class ProductsEvent {}
 class GetAllProductsEvent extends ProductsEvent{}
 
 class GetProductsByCategoryEvent extends ProductsEvent{
-  final int category;
+  final String categoryName;
 
-  GetProductsByCategoryEvent({required this.category});
+  GetProductsByCategoryEvent({required this.categoryName});
 }
 

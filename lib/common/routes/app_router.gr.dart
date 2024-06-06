@@ -10,11 +10,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i7;
 import 'package:eco_market/common/bottom_nav_bar.dart' as _i2;
+import 'package:eco_market/common/models/product_category_model.dart' as _i9;
 import 'package:eco_market/features/basket/basket_screen.dart' as _i1;
 import 'package:eco_market/features/history/history_screen.dart' as _i3;
 import 'package:eco_market/features/home/home_screen.dart' as _i4;
-import 'package:eco_market/features/home/screens/products/products_screen.dart' as _i6;
+import 'package:eco_market/features/home/screens/products/products_screen.dart'
+    as _i6;
 import 'package:eco_market/features/info/info_screen.dart' as _i5;
+import 'package:flutter/material.dart' as _i8;
 
 abstract class $AppRouter extends _i7.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -52,9 +55,15 @@ abstract class $AppRouter extends _i7.RootStackRouter {
       );
     },
     ProductsRoute.name: (routeData) {
+      final args = routeData.argsAs<ProductsRouteArgs>();
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i6.ProductsScreen(),
+        child: _i6.ProductsScreen(
+          key: args.key,
+          categoryName: args.categoryName,
+          productCategories: args.productCategories,
+          tabIndex: args.tabIndex,
+        ),
       );
     },
   };
@@ -132,14 +141,48 @@ class InfoRoute extends _i7.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i6.ProductsScreen]
-class ProductsRoute extends _i7.PageRouteInfo<void> {
-  const ProductsRoute({List<_i7.PageRouteInfo>? children})
-      : super(
+class ProductsRoute extends _i7.PageRouteInfo<ProductsRouteArgs> {
+  ProductsRoute({
+    _i8.Key? key,
+    required String categoryName,
+    required List<_i9.ProductCategoryModel> productCategories,
+    required int tabIndex,
+    List<_i7.PageRouteInfo>? children,
+  }) : super(
           ProductsRoute.name,
+          args: ProductsRouteArgs(
+            key: key,
+            categoryName: categoryName,
+            productCategories: productCategories,
+            tabIndex: tabIndex,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ProductsRoute';
 
-  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+  static const _i7.PageInfo<ProductsRouteArgs> page =
+      _i7.PageInfo<ProductsRouteArgs>(name);
+}
+
+class ProductsRouteArgs {
+  const ProductsRouteArgs({
+    this.key,
+    required this.categoryName,
+    required this.productCategories,
+    required this.tabIndex,
+  });
+
+  final _i8.Key? key;
+
+  final String categoryName;
+
+  final List<_i9.ProductCategoryModel> productCategories;
+
+  final int tabIndex;
+
+  @override
+  String toString() {
+    return 'ProductsRouteArgs{key: $key, categoryName: $categoryName, productCategories: $productCategories, tabIndex: $tabIndex}';
+  }
 }

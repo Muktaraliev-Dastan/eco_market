@@ -9,7 +9,7 @@ class ProductCard extends StatefulWidget {
     required this.pathToImage,
   });
 
-  final double price;
+  final String price;
   final String title;
   final String pathToImage;
 
@@ -18,7 +18,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  int counter = 0;
+  int counter = 1;
 
   void incrementCounter() {
     setState(() {
@@ -64,11 +64,11 @@ class _ProductCardState extends State<ProductCard> {
             widget.title,
             style: AppTexts.s14b,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            maxLines: 1,
           ),
           SizedBox(height: 18),
           Text(
-            '${widget.price}',
+            widget.price,
             style: AppTexts.s20g,
           ),
           SizedBox(height: 12),
