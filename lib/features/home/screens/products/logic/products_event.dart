@@ -11,3 +11,9 @@ class GetProductsByCategoryEvent extends ProductsEvent{
   GetProductsByCategoryEvent({required this.categoryName});
 }
 
+class GetProductsSearch extends ProductsEvent{
+  final String search;
+
+  GetProductsSearch({required this.search});
+}
+

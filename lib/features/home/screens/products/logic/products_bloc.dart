@@ -5,6 +5,7 @@ import 'package:eco_market/features/home/screens/products/repository/products_re
 import 'package:meta/meta.dart';
 
 part 'products_event.dart';
+
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
@@ -13,33 +14,45 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc(this.productsRepository) : super(ProductsInitialState()) {
     on<GetAllProductsEvent>((event, emit) async {
       emit(ProductsLoadingState());
-      try{
-        List<ProductModel> products =
-            await productsRepository.getAllProducts();
-        emit(ProductsLoadedState(products:products));
-      }catch(error){
+      try {
+        List<ProductModel> products = await productsRepository.getAllProducts();
+        emit(ProductsLoadedState(products: products));
+      } catch (error) {
         emit(
           ProductsErrorState(
             error: CatchException.convertException(error),
           ),
         );
       }
-
     });
     on<GetProductsByCategoryEvent>((event, emit) async {
       emit(ProductsLoadingState());
-      try{
+      try {
         List<ProductModel> products =
-        await productsRepository.getProductsByCategory(event.categoryName);
-        emit(ProductsLoadedState(products:products));
-      }catch(error){
+            await productsRepository.getProductsByCategory(event.categoryName);
+        emit(ProductsLoadedState(products: products));
+      } catch (error) {
         emit(
           ProductsErrorState(
             error: CatchException.convertException(error),
           ),
         );
       }
+    });
 
+    on<GetProductsSearch>((event, emit) async {
+      emit(ProductsLoadingState());
+      try {
+        List<ProductModel> products =
+            await productsRepository.getProductsSearch(event.search);
+        emit(ProductsLoadedState(products: products));
+      } catch (error) {
+        emit(
+          ProductsErrorState(
+            error: CatchException.convertException(error),
+          ),
+        );
+      }
     });
   }
 }

@@ -3,14 +3,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
-class SearchLine extends StatelessWidget {
-  const SearchLine({super.key});
+class SearchLine extends StatefulWidget {
+  final void Function(String) isInputEmptyCallback;
+
+  const SearchLine({
+    super.key,
+    required this.isInputEmptyCallback,
+  });
+
+  @override
+  State<SearchLine> createState() => _SearchLineState();
+}
+
+class _SearchLineState extends State<SearchLine> {
+  TextEditingController productName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: (value){
+        widget.isInputEmptyCallback(value);
+      },
+      controller: productName,
+      keyboardType: TextInputType.name,
+      maxLength: 30,
       cursorColor: AppColors.grey,
       decoration: InputDecoration(
+        counterText: "",
         fillColor: AppColors.lightGrey,
         filled: true,
         prefixIcon: const Icon(

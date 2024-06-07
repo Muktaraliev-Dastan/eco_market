@@ -67,6 +67,8 @@ class _ProductsScreenState extends State<ProductsScreen>
       ),
     );
 
+    var tabIndex=_tabController.index;
+
     int totalPrice = 0;
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -92,7 +94,9 @@ class _ProductsScreenState extends State<ProductsScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            const SearchLine(),
+            SearchLine(isInputEmptyCallback: (value){
+              productsBloc.add(GetProductsSearch(search: value));
+            },),
             Expanded(
               child: DefaultTabController(
                 length: categories.length,
@@ -101,21 +105,27 @@ class _ProductsScreenState extends State<ProductsScreen>
                     TabBar(
                       controller: _tabController,
                       onTap: (index) {
-                        if (index == 0) {
-                          productsBloc.add(GetAllProductsEvent());
+                        if (index == tabIndex) {
                         } else {
-                          productsBloc.add(
-                            GetProductsByCategoryEvent(
-                              categoryName: categories[index],
-                            ),
-                          );
+                          if (index == 0) {
+                            productsBloc.add(GetAllProductsEvent());
+                            tabIndex=0;
+                          } else {
+                            productsBloc.add(
+                              GetProductsByCategoryEvent(
+                                categoryName: categories[index],
+                              ),
+                            );
+                            tabIndex=index;
+                          }
                         }
                       },
                       indicatorColor: AppColors.green,
                       isScrollable: true,
                       tabAlignment: TabAlignment.start,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: Colors.green,
+                      labelColor: AppColors.green,
+                      unselectedLabelColor: AppColors.grey,
                       labelStyle: AppTexts.s16grey,
                       tabs: tabbs,
                     ),
@@ -146,9 +156,10 @@ class _ProductsScreenState extends State<ProductsScreen>
                             );
                           }
                           if (state is ProductsErrorState) {
-                            return const SizedBox(
+                            var textt=state.error.message.toString();
+                            return SizedBox(
                               child: Center(
-                                child: Text("ERROR"),
+                                child: Text(textt),
                               ),
                             );
                           }
