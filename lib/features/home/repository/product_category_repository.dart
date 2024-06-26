@@ -11,7 +11,7 @@ class ProductCategoryRepository {
     try {
       Response response = await apiRequester.toGet('/product-category-list/');
       if (response.statusCode == 200) {
-        List categories = response.data??[];
+        List categories = response.data ?? [];
         return List<ProductCategoryModel>.from(
           categories.map(
             (element) => ProductCategoryModel.fromJson(element),

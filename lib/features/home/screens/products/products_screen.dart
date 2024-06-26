@@ -2,12 +2,14 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:eco_market/common/models/product_category_model.dart';
 import 'package:eco_market/common/utils/constants.dart';
+import 'package:eco_market/features/basket/logic/order_bloc.dart';
 import 'package:eco_market/features/home/screens/products/logic/products_bloc.dart';
 import 'package:eco_market/features/home/screens/products/repository/products_repository.dart';
-import 'package:eco_market/features/home/widgets/product_card.dart';
+import 'package:eco_market/features/home/widgets/custom_grid_view.dart';
 import 'package:eco_market/features/home/widgets/search_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 @RoutePage()
 class ProductsScreen extends StatefulWidget {
@@ -45,6 +47,7 @@ class _ProductsScreenState extends State<ProductsScreen>
     super.initState();
   }
 
+
   @override
   void dispose() {
     productsBloc.close();
@@ -52,24 +55,25 @@ class _ProductsScreenState extends State<ProductsScreen>
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     List<String> categories = List.from(
       widget.productCategories.map((x) => x.name),
     );
+
     categories.insert(0, 'Все');
 
     List<Widget> tabbs = List.from(
       categories.map(
-        (e) => Tab(
-          text: e,
-        ),
+            (e) =>
+            Tab(
+              text: e,
+            ),
       ),
     );
 
-    var tabIndex=_tabController.index;
-
-    int totalPrice = 0;
+    var tabIndex = _tabController.index;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -94,9 +98,11 @@ class _ProductsScreenState extends State<ProductsScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            SearchLine(isInputEmptyCallback: (value){
-              productsBloc.add(GetProductsSearch(search: value));
-            },),
+            SearchLine(
+              isInputEmptyCallback: (value) {
+                productsBloc.add(GetProductsSearch(search: value));
+              },
+            ),
             Expanded(
               child: DefaultTabController(
                 length: categories.length,
@@ -105,18 +111,17 @@ class _ProductsScreenState extends State<ProductsScreen>
                     TabBar(
                       controller: _tabController,
                       onTap: (index) {
-                        if (index == tabIndex) {
-                        } else {
+                        if (index == tabIndex) {} else {
                           if (index == 0) {
                             productsBloc.add(GetAllProductsEvent());
-                            tabIndex=0;
+                            tabIndex = 0;
                           } else {
                             productsBloc.add(
                               GetProductsByCategoryEvent(
                                 categoryName: categories[index],
                               ),
                             );
-                            tabIndex=index;
+                            tabIndex = index;
                           }
                         }
                       },
@@ -145,18 +150,15 @@ class _ProductsScreenState extends State<ProductsScreen>
                               controller: _tabController,
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
-                                CustomGridView(state: state),
+                                for (var i = 0; i < categories.length; i++)
+                                  CustomGridView(
+                                    state: state,
+                                  ),
                               ],
                             );
                           }
                           if (state is ProductsErrorState) {
-                            var textt=state.error.message.toString();
+                            var textt = state.error.message.toString();
                             return SizedBox(
                               child: Center(
                                 child: Text(textt),
@@ -182,45 +184,25 @@ class _ProductsScreenState extends State<ProductsScreen>
           size: 30,
           color: AppColors.white,
         ),
-        label: Text(
-          'Корзина $totalPrice c',
-          style: TextStyle(fontSize: 16, color: AppColors.white),
+        label: BlocBuilder<OrderBloc, OrderState>(
+          builder: (context, state) {
+            if(state is OrderLoadingState){
+
+            }
+            if(state is OrderLoadedState){
+              return Text(
+                'Корзина ${state.totalPrice}с',
+                style: TextStyle(fontSize: 16, color: AppColors.white),
+              );
+            }
+            return Text(
+              'Корзина',
+              style: TextStyle(fontSize: 16, color: AppColors.white),
+            );
+          },
         ),
         backgroundColor: AppColors.green,
       ),
     );
-  }
-}
-
-class CustomGridView extends StatelessWidget {
-  final ProductsLoadedState state;
-
-  const CustomGridView({
-    super.key,
-    required this.state,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-        shrinkWrap: true,
-        itemCount: state.products.length,
-        // shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 11,
-            crossAxisSpacing: 11,
-            mainAxisExtent: 291),
-        itemBuilder: (ctx, index) {
-          return InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () {},
-            child: ProductCard(
-              price: state.products[index].price ?? "-",
-              title: state.products[index].title ?? "title",
-              pathToImage: state.products[index].image ?? "",
-            ),
-          );
-        });
   }
 }

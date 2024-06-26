@@ -7,7 +7,7 @@ class ApiRequester {
   Future<Dio> initDio() async {
     return Dio(
       BaseOptions(
-        baseUrl:baseUrl,
+        baseUrl: baseUrl,
         responseType: ResponseType.json,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
@@ -15,21 +15,31 @@ class ApiRequester {
     );
   }
 
-  Future<Response> toGet(String url, [Map<String, dynamic>? queryParams]) async {
+  Future<Response> toGet(String url,
+      [Map<String, dynamic>? queryParams]) async {
     Dio dio = await initDio();
 
     try {
-      return dio.get(url, queryParameters: queryParams);
+      return dio.get(
+        url,
+        queryParameters: queryParams,
+      );
     } catch (e) {
       throw CatchException.convertException(e);
     }
   }
 
-  Future<Response> toPost(String url) async {
+  Future<Response> toPost(
+    String url,
+    Map<String, dynamic>? queryParams,
+  ) async {
     Dio dio = await initDio();
 
     try {
-      return dio.post(url);
+      return dio.post(
+        url,
+        queryParameters: queryParams,
+      );
     } catch (e) {
       throw CatchException.convertException(e);
     }

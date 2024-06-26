@@ -36,7 +36,7 @@ class BottomNavBar extends StatelessWidget {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: "Главная",
+                label: "Магазин",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_basket),
